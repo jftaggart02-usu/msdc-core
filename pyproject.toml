@@ -1,0 +1,66 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "msdc-core"
+version = "0.1.0"
+description = "Core functionality for the Mini Self Driving Car (MSDC) project"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["autonomous", "robotics", "ros2", "self-driving"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "pylint>=3.0",
+    "mypy>=1.6",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["msdc_core*"]
+
+# ---------------------------------------------------------------------------
+# Pylint
+# ---------------------------------------------------------------------------
+[tool.pylint.main]
+jobs = 1
+py-version = "3.10"
+
+[tool.pylint."messages control"]
+disable = [
+    "missing-module-docstring",
+    "missing-function-docstring",
+    "too-few-public-methods",
+    "use-implicit-booleaness-not-comparison",
+]
+
+[tool.pylint.format]
+max-line-length = 100
+
+# ---------------------------------------------------------------------------
+# Mypy
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
