@@ -1,6 +1,6 @@
 torch
 torchvision
-numpy
+numpy<2
 Pillow
 pandas
 tqdm
@@ -9,3 +9,5 @@ pandas-stubs
 types-tqdm
 pylint
 pytest
+open3d
+opencv-python
