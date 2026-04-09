@@ -26,26 +26,24 @@ class SteeringNet(torch.nn.Module):
         self.fc4 = torch.nn.Linear(in_features=10, out_features=1)
 
         self.layers = torch.nn.Sequential(
-            [
-                self.conv1,
-                torch.nn.ReLU(),
-                self.conv2,
-                torch.nn.ReLU(),
-                self.conv3,
-                torch.nn.ReLU(),
-                self.conv4,
-                torch.nn.ReLU(),
-                self.conv5,
-                torch.nn.ReLU(),
-                torch.nn.Flatten(),
-                self.fc1,
-                torch.nn.ReLU(),
-                self.fc2,
-                torch.nn.ReLU(),
-                self.fc3,
-                torch.nn.ReLU(),
-                self.fc4,
-            ]
+            self.conv1,
+            torch.nn.ReLU(),
+            self.conv2,
+            torch.nn.ReLU(),
+            self.conv3,
+            torch.nn.ReLU(),
+            self.conv4,
+            torch.nn.ReLU(),
+            self.conv5,
+            torch.nn.ReLU(),
+            torch.nn.Flatten(),
+            self.fc1,
+            torch.nn.ReLU(),
+            self.fc2,
+            torch.nn.ReLU(),
+            self.fc3,
+            torch.nn.ReLU(),
+            self.fc4,
         )
 
     def forward(self, x):

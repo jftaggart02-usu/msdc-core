@@ -33,7 +33,7 @@ class SteeringDataset(torch.utils.data.Dataset):
         normalize_index_column(self.labels)
 
         # Define transforms (Downsample by a factor of 2 and convert to tensor)
-        self.transforms = transforms.Compose([transforms.Resize(240, 320), transforms.ToTensor()])
+        self.transforms = transforms.Compose([transforms.Resize((240, 320)), transforms.ToTensor()])
 
     def __len__(self) -> int:
         return len(self.labels)

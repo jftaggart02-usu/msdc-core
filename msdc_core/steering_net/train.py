@@ -82,8 +82,8 @@ def train(
 if __name__ == "__main__":
     # Example usage
     train(
-        dataset_dir="/home/jftaggart02/datasets/trial_03_augmented",
-        model_checkpoint_dir="/home/jftaggart02/models/trial_03_checkpoints",
+        dataset_dir="/home/jftaggart02/datasets/trial_03_augmented_01",
+        model_checkpoint_dir="/home/jftaggart02/models/trial_03_augmented_01",
         num_epochs=10,
         batch_size=32,
         test_percent=0.2,
