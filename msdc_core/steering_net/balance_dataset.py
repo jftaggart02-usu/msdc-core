@@ -18,11 +18,9 @@ dataset/
 Where labels.csv has columns: `timestamp`, `index`, and `steering_angle_rad`.
 """
 
-from pathlib import Path
-import shutil
-
 import pandas as pd
 import matplotlib.pyplot as plt
+from msdc_core.steering_net.dataset_utils import validate_dataset_structure, copy_dataset
 
 
 def plot_histogram_of_steering_angles(df: pd.DataFrame, bins: int, show_plot: bool) -> None:
@@ -40,73 +38,6 @@ def plot_histogram_of_steering_angles(df: pd.DataFrame, bins: int, show_plot: bo
     plt.title("Distribution of Steering Angles")
     if show_plot:
         plt.show()
-
-
-def validate_dataset_structure(dataset_dir: str) -> None:
-    """Validates that the dataset directory has the expected structure.
-
-    Args:
-        dataset_dir: The directory containing the dataset.
-
-    Raises:
-        ValueError: If the dataset directory does not have the expected structure.
-    """
-    dataset_path = Path(dataset_dir)
-    if not dataset_path.exists():
-        raise ValueError("Dataset directory does not exist.")
-    if not (dataset_path / "labels.csv").exists():
-        raise ValueError("Dataset must contain labels.csv.")
-    if not (dataset_path / "intrinsics.json").exists():
-        raise ValueError("Dataset must contain intrinsics.json.")
-    if not (dataset_path / "depth").is_dir():
-        raise ValueError("Dataset must contain depth/ subdirectory.")
-    if not (dataset_path / "rgb").is_dir():
-        raise ValueError("Dataset must contain rgb/ subdirectory.")
-
-
-def normalize_index(index: object, width: int = 8) -> str:
-    """Normalizes the index value to a zero-padded string of the specified width."""
-
-    if pd.isna(index):
-        raise ValueError("Index cannot be NaN.")
-    s = str(index).strip()
-    if s.endswith(".0"):
-        s = s[:-2]
-    if not s.isdigit():
-        raise ValueError(f"Invalid index value: '{index}'.")
-    return str(int(s)).zfill(width)
-
-
-def copy_dataset(source_dir: str, target_dir: str, samples_to_keep: pd.DataFrame) -> None:
-    """Copies the dataset from the source directory to the target directory, keeping only the samples specified in the DataFrame.
-
-    Args:
-        source_dir: The directory containing the original dataset.
-        target_dir: The directory where the modified dataset will be saved. This directory must not already exist.
-        samples_to_keep: A DataFrame containing the samples to keep, with the same format as labels.csv.
-    """
-    validate_dataset_structure(source_dir)
-
-    # Create target dir structure
-    Path(target_dir).mkdir(parents=True, exist_ok=False)
-    (Path(target_dir) / "rgb").mkdir(parents=True, exist_ok=False)
-    (Path(target_dir) / "depth").mkdir(parents=True, exist_ok=False)
-
-    # Copy over rgb and depth images for the samples to keep
-    for _, row in samples_to_keep.iterrows():
-        index = normalize_index(row["index"], width=8)
-        shutil.copy(f"{source_dir}/rgb/{index}.png", f"{target_dir}/rgb/{index}.png")
-        shutil.copy(f"{source_dir}/depth/{index}.png", f"{target_dir}/depth/{index}.png")
-
-    # Copy over intrinsics.json from source to target
-    shutil.copy(f"{source_dir}/intrinsics.json", f"{target_dir}/intrinsics.json")
-
-    # Normalize index column of labels.csv
-    samples_to_keep["index"] = samples_to_keep["index"].apply(lambda x: normalize_index(x, width=8))
-
-    # Write the modified labels.csv file to the target directory
-    labels_path = f"{target_dir}/labels.csv"
-    samples_to_keep.to_csv(labels_path, index=False)
 
 
 def balance_dataset(
