@@ -121,9 +121,9 @@ def augment_dataset(dataset_dir: str, target_dir: str, config: AugmentationConfi
 def main() -> None:
     """Example usage of augment_dataset function."""
     dataset_dir = "/home/jftaggart02/datasets/trial_03_balanced"
-    target_dir = "/home/jftaggart02/datasets/trial_03_augmented2"
+    target_dir = "/home/jftaggart02/datasets/trial_03_augmented"
     config = AugmentationConfig(
-        percent_samples_to_augment=0.05, max_translation=0.1, steering_translation_factor=0.5, do_rotation=False
+        percent_samples_to_augment=0.50, max_translation=0.15, steering_translation_factor=0.5, do_rotation=False
     )
     augment_dataset(dataset_dir, target_dir, config)
 
