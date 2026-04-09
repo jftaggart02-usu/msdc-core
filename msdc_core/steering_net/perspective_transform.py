@@ -5,9 +5,12 @@ The transformed image can optionally be inpainted to fill in gaps caused by the 
 Note on coordinate frames:
 - The input RGB and depth images are assumed to be in the same camera frame, with the camera looking along the positive z-axis, x-axis to the right, and y-axis down.
 - The transformation matrix is applied to the point cloud in this camera frame, and the output image is generated from the transformed point cloud using the same camera intrinsics.
-- A positive translation along the x-axis in the transformation matrix will make it appear as if the camera was shifted to the left.
-- A positive translation along the y-axis will make it appear as if the camera was shifted up.
-- A positive translation along the z-axis will make it appear as if the camera was shifted backward, away from the scene.
+- A positive translation along the x-axis will shift the camera left.
+- A positive translation along the y-axis will shift the camera up.
+- A positive translation along the z-axis will shift the camera backward.
+- A positive rotation around the x-axis will pitch the camera down.
+- A positive rotation around the y-axis will yaw the camera left.
+- A positive rotation around the z-axis will roll the camera counter-clockwise (left).
 """
 
 import json
@@ -167,11 +170,13 @@ def perspective_transform(
 
 if __name__ == "__main__":
     intrinsic = load_intrinsic_json("/home/jftaggart02/datasets/trial_03_clean/intrinsics.json")
-    transformation_matrix = create_transform_matrix(rotation_angles=np.array([0, 0, 0]), translation_vector=np.array([0.1, 0, 0]))
+    transformation_matrix = create_transform_matrix(
+        rotation_angles=np.array([0.0, 0.0, 0.0]), translation_vector=np.array([0.0, 0.0, 0.0])
+    )
     perspective_transform(
         rgb_path="/home/jftaggart02/datasets/trial_03_clean/rgb/00000080.png",
         depth_path="/home/jftaggart02/datasets/trial_03_clean/depth/00000080.png",
-        dest_path="/home/jftaggart02/datasets/transformed_2.png",
+        dest_path="/home/jftaggart02/datasets/transformed_3.png",
         intrinsic=intrinsic,
         transformation_matrix=transformation_matrix,
         inpaint=True,
