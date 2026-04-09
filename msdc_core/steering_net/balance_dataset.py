@@ -1,4 +1,4 @@
-"""This module contains code that performs preprocessing on the dataset, such as balancing and augmentation.
+"""This module contains code that balances a dataset by removing samples with certain steering angles.
 
 The dataset is of the format:
 ```
