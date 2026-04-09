@@ -1,4 +1,4 @@
-"""This module contains code that performs preprocessing on the dataset, such as normalization and augmentation.
+"""This module contains code that performs preprocessing on the dataset, such as balancing and augmentation.
 
 The dataset is of the format:
 ```
