@@ -73,11 +73,17 @@ def augment_dataset(dataset_dir: str, target_dir: str, config: AugmentationConfi
         # Generate random rotation and translation values within the specified limits
         if config.do_rotation:
             rotation_y = random.uniform(-config.max_rotation, config.max_rotation)
+            rotation_vector = np.array([0.0, rotation_y, 0.0])
+        else:
+            rotation_vector = np.array([0.0, 0.0, 0.0])
         if config.do_translation:
             translation_x = random.uniform(-config.max_translation, config.max_translation)
+            translation_vector = np.array([translation_x, 0.0, 0.0])
+        else:
+            translation_vector = np.array([0.0, 0.0, 0.0])
 
         # Transform the images using the random rotation and translation, and save the augmented images
-        transform_matrix = create_transform_matrix(np.array([0.0, rotation_y, 0.0]), np.array([translation_x, 0.0, 0.0]))
+        transform_matrix = create_transform_matrix(rotation_vector, translation_vector)
         perspective_transform(
             rgb_path=f"{dataset_dir}/rgb/{index}.png",
             depth_path=f"{dataset_dir}/depth/{index}.png",
