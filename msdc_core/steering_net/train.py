@@ -1,5 +1,7 @@
 """This module implements a training loop for the steering net."""
 
+import json
+
 import torch
 from torch.optim import Adam
 from torch.nn import MSELoss
@@ -78,13 +80,24 @@ def train(
         torch.save(model.state_dict(), checkpoint_path)
         print(f"Model checkpoint saved at: {checkpoint_path}")
 
+    # Save training params in a JSON file in the checkpoint directory for future reference
+    training_params = {
+        "num_epochs": num_epochs,
+        "batch_size": batch_size,
+        "test_percent": test_percent,
+        "learning_rate": learning_rate,
+        "initial_checkpoint_path": initial_checkpoint_path,
+    }
+    with open(f"{model_checkpoint_dir}/training_params.json", "w") as f:
+        json.dump(training_params, f, indent=4)
+
 
 if __name__ == "__main__":
     # Example usage
     train(
-        dataset_dir="/home/jftaggart02/datasets/trial_03_augmented_01",
-        model_checkpoint_dir="/home/jftaggart02/models/trial_03_augmented_01",
-        num_epochs=10,
+        dataset_dir="/home/jftaggart02/datasets/trial_03_augmented_02",
+        model_checkpoint_dir="/home/jftaggart02/models/trial_03_augmented_02/train_01",
+        num_epochs=5,
         batch_size=32,
         test_percent=0.2,
         learning_rate=0.001,
