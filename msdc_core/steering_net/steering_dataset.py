@@ -61,5 +61,4 @@ class SteeringDataset(torch.utils.data.Dataset):
         """
         img = Image.open(image_path).convert("RGB")
 
-        img_tensor: torch.Tensor = self.transforms(img)
-        return img_tensor.float() / 255.0
+        return self.transforms(img)
