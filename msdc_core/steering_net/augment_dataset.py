@@ -3,9 +3,10 @@
 Note: negative steering angle is a left turn, positive steering angle is a right turn.
 """
 
+import json
 import math
 from typing import Any
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 import random
 
 import numpy as np
@@ -117,13 +118,23 @@ def augment_dataset(dataset_dir: str, target_dir: str, config: AugmentationConfi
     new_rows_df = pd.DataFrame(new_rows)
     new_rows_df.to_csv(f"{target_dir}/labels.csv", mode="a", index=False, header=False)
 
+    # Save the augmentation parameters to a JSON file in the target directory for future reference
+    with open(f"{target_dir}/augmentation_config.json", "w") as f:
+        json.dump(asdict(config), f, indent=4)
+
 
 def main() -> None:
     """Example usage of augment_dataset function."""
     dataset_dir = "/home/jftaggart02/datasets/trial_03_balanced"
-    target_dir = "/home/jftaggart02/datasets/trial_03_augmented"
+    target_dir = "/home/jftaggart02/datasets/trial_03_augmented_02"
     config = AugmentationConfig(
-        percent_samples_to_augment=0.50, max_translation=0.15, steering_translation_factor=0.5, do_rotation=False
+        percent_samples_to_augment=0.50,
+        max_translation=0.1,
+        steering_translation_factor=0.5,
+        do_rotation=True,
+        do_translation=True,
+        max_rotation=5.0,
+        steering_rotation_factor=1.0,
     )
     augment_dataset(dataset_dir, target_dir, config)
 
