@@ -92,13 +92,42 @@ def train(
         json.dump(training_params, f, indent=4)
 
 
+def validate_model(dataset_dir: str, model_checkpoint_path: str) -> None:
+    """Validate the model on a dataset and print the average difference between predicted and actual steering angles."""
+    # Create dataset and dataloader
+    dataset = SteeringDataset(dataset_dir=dataset_dir)
+    dataloader = DataLoader(dataset, batch_size=32)
+
+    # Load model checkpoint
+    model = SteeringNet()
+    model.load_state_dict(torch.load(model_checkpoint_path))
+    model.eval()
+
+    total_difference = 0
+    num_samples = 0
+
+    with torch.no_grad():
+        for images, steering_angles in dataloader:
+            predicted_steering_angles = model(images)
+            difference = torch.abs(predicted_steering_angles - steering_angles)
+            total_difference += difference.sum().item()
+            num_samples += steering_angles.size(0)
+
+    avg_difference = total_difference / num_samples
+    print(f"Average difference between predicted and actual steering angles: {avg_difference:.4f} radians")
+
+
 if __name__ == "__main__":
     # Example usage
-    train(
-        dataset_dir="/home/jftaggart02/datasets/trial_03_augmented_02",
-        model_checkpoint_dir="/home/jftaggart02/models/trial_03_augmented_02/train_01",
-        num_epochs=5,
-        batch_size=32,
-        test_percent=0.2,
-        learning_rate=0.001,
+    # train(
+    #     dataset_dir="/home/jetson/datasets/trial_04_balanced",
+    #     model_checkpoint_dir="/home/jetson/models/trial_04_balanced",
+    #     num_epochs=10,
+    #     batch_size=32,
+    #     test_percent=0.2,
+    #     learning_rate=0.001,
+    # )
+    validate_model(
+        dataset_dir="/home/jetson/datasets/trial_04_balanced",
+        model_checkpoint_path="/home/jetson/models/trial_04_balanced/steering_net_epoch_8.pth",
     )
