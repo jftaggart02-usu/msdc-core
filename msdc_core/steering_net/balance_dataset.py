@@ -23,21 +23,26 @@ import matplotlib.pyplot as plt
 from msdc_core.steering_net.dataset_utils import validate_dataset_structure, copy_dataset
 
 
-def plot_histogram_of_steering_angles(df: pd.DataFrame, bins: int, show_plot: bool) -> None:
+def plot_histogram_of_steering_angles(df: pd.DataFrame, bins: int, show_plot: bool, save_dir: str | None = None) -> None:
     """Plots a histogram of the steering angles in the dataset.
 
     Args:
         df: The DataFrame containing the steering angle data.
         bins: The number of bins for the histogram.
         show_plot: Whether to display the plot.
+        save_dir: The directory where the plot will be saved. If None, the plot will not be saved.
     """
     # Plot the histogram of steering angles
     df["steering_angle_rad"].hist(bins=bins)
     plt.xlabel("Steering Angle (radians)")
     plt.ylabel("Frequency")
     plt.title("Distribution of Steering Angles")
+    if save_dir is not None:
+        plt.savefig(f"{save_dir}/steering_angle_histogram.png")
+        print(f"Plot saved to {save_dir}/steering_angle_histogram.png")
     if show_plot:
         plt.show()
+        
 
 
 def balance_dataset(
@@ -119,7 +124,7 @@ def balance_dataset(
         df = df.drop(samples_to_remove_df.index)
 
     # Visualize the new distribution of steering angles after removal
-    plot_histogram_of_steering_angles(df, bins=hist_bins, show_plot=True)
+    plot_histogram_of_steering_angles(df, bins=hist_bins, show_plot=False, save_dir=dataset_dir)
     response = input("Do you wish to create a new dataset with the balanced steering angles? (y/n): ")
     if response.lower() == "y":
         # Create target dir if it doesn't exist
@@ -132,10 +137,10 @@ def balance_dataset(
 def main() -> None:
     """Example usage of the balance_dataset function."""
 
-    dataset_dir = "/home/jftaggart02/datasets/trial_03_clean"
-    target_dir = "/home/jftaggart02/datasets/trial_03_balanced"
-    steering_angle_ranges = [(-0.05, 0.05)]
-    samples_to_remove = [772]
+    dataset_dir = "/home/jetson/datasets/trial_04_clean"
+    target_dir = "/home/jetson/datasets/trial_04_balanced_01"
+    steering_angle_ranges = [(-0.0001, 0.0001), (-0.8, -0.052), (0.052, 0.1567)]
+    samples_to_remove = [1500, 400, 100]
     hist_bins = 15
 
     balance_dataset(dataset_dir, target_dir, steering_angle_ranges, samples_to_remove, hist_bins)
@@ -143,9 +148,9 @@ def main() -> None:
 
 if __name__ == "__main__":
     # plot_histogram_of_steering_angles(
-    #     pd.read_csv("/home/jftaggart02/datasets/trial_03_clean/labels.csv"), bins=15, show_plot=True
+    #     pd.read_csv("/home/jetson/datasets/trial_04_clean/labels.csv"), bins=15, show_plot=False, save_dir="/home/jetson/datasets/trial_04_clean"
     # )
     # main()
     plot_histogram_of_steering_angles(
-        pd.read_csv("/home/jftaggart02/datasets/trial_03_balanced/labels.csv"), bins=15, show_plot=True
+        pd.read_csv("/home/jetson/datasets/trial_04_balanced_01/labels.csv"), bins=15, show_plot=False, save_dir="/home/jetson/datasets/trial_04_balanced_01"
     )
